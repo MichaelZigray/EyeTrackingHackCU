@@ -216,55 +216,25 @@ def main():
   global img_height, img_width
   # Read in image using the imread function
   img = cv2.imread('./michael-eye-photos-hand-cropped/tl.jpg')
-  # Examples of adding color ranges: You'll need to find the right ones for isolating the lego blocks!
-  
-  # TODO: Add the color ranges for each block here!
-  # HINT: Open up the image in your favorite image editor and use the eyedropper tool to find a light and dark spot on each block -- those colors can be used for each range.
-  # Examples:
-  # add_color_range_to_detect([0,0,200], [0,0,255]) # Detect red
-  # add_color_range_to_detect([0,200,0], [0,255,0]) # Detect green
-  # add_color_range_to_detect([200,0,0], [255,0,0]) # Detect blue
-
-  # add_color_range_to_detect([0,0,90],[70,80,255]) #red
-  # add_color_range_to_detect([0,100,200],[60,255,255]) #yellow
-  # add_color_range_to_detect([10,150,0],[130,255,115]) #light green
-  # add_color_range_to_detect([0,50,0],[40,110,40]) #dark green
-  # add_color_range_to_detect([80,0,0],[255,145,90]) #blue
-
-  ########## PART 1 ############
-  # Create img_mask of all foreground pixels, where foreground is defined as passing the color filter
-#   add_color_range_to_detect([115,80,80],[145,130,140]) #whites of the eyes
-#   img_mask_red = do_color_filtering(img)
-#   remove_color_range_to_detect()
 
   add_color_range_to_detect([0,0,0],[79,50,50]) #whites of the eyes
   img_mask_black = do_color_filtering(img)
   smudged = smudge(img_mask_black, 0)
   smudged = smudge(smudged, 1)
-  remove_color_range_to_detect()
+  # remove_color_range_to_detect()
 
-  ########## PART 2 ############
-#   # Find all the blobs in the img_mask
-#   blobs_red = get_blobs(img_mask_red)
   blobs_smudged = get_blobs(smudged)
   blobs = blobs_smudged
 
-  ########## PART 3 ############
-  # Get the centroids of the img_mask blobs
   object_positions_list = get_blob_centroids(blobs)
 
-  ########## PART 4 (Done for you) ############
-  # Display images and blob annotations
   img_markup = img.copy()
   for obj_pos in object_positions_list:
     obj_pos_vector = np.array(obj_pos).astype(np.int32) # In case your object positions weren't numpy arrays
     img_markup = cv2.circle(img_markup,(obj_pos_vector[1], obj_pos_vector[0]),5,(255,255,255),10)
     print("Object pos: " + str(obj_pos_vector))
 
-  # Display the original image, the mask, and the original image with object centers drawn on it
-  # Objective: Show that your algorithm works by displaying the results!
-  #
-  # Approach:
+
   # Use the OpenCV imshow() function to display the results of your object detector
   # Create a window for each image
   # cv2.imshow('orig', img)
@@ -273,6 +243,7 @@ def main():
   cv2.imshow('located', img_markup)
   cv2.waitKey(-1)  # Wait until a key is pressed to exit the program
   cv2.destroyAllWindows() # Close all the windows
+  
   if(len(object_positions_list) == 1):
     return object_positions_list[0]
   else:
